@@ -8,11 +8,15 @@ using System.Text;
 using System.Security.Cryptography;
 using GDXJ.Lib.Object.User;
 using GDXJ.Lib.Lib;
+using System.Windows.Media;
 
 namespace GDXJ.Lib.Object.Login
 {
     public class Login_Gdxj
     {
+        GDXJEvens LoginEvens;
+        int flag = 0;
+
         public string Username { get; set; }
         public string Password { get; set; }
         public string VerificationCode { get; set; }
@@ -36,12 +40,31 @@ namespace GDXJ.Lib.Object.Login
 
         public Login_Gdxj(GdxjUser gdxjUser, MyCookie cookie)
         {
-            this.myCookie = cookie;
-            this.gdxjUser = gdxjUser;
-            this.LoginCompleted = false;
-            GetKeyCompleted = false;
-            GetKey();
-            VerificationCodeImageRefresh();
+            try
+            {
+                this.myCookie = cookie;
+                this.gdxjUser = gdxjUser;
+                this.LoginCompleted = false;
+                GetKeyCompleted = false;
+                GetKey();
+                VerificationCodeImageRefresh();
+            }
+            catch
+            {
+                flag = -1;
+            } 
+        }
+
+        public void Subscribe(GDXJEvens.GDXJEventHandler handler)
+        {
+            if (LoginEvens != null)
+                LoginEvens.Subscribe(handler);
+        }
+        //取消订阅事件
+        public void UnSubscribe(GDXJEvens.GDXJEventHandler handler)
+        {
+            if (LoginEvens != null)
+                LoginEvens.UnSubscribe(handler);
         }
 
         /// <summary>
@@ -87,6 +110,8 @@ namespace GDXJ.Lib.Object.Login
 
         public bool Login()
         {
+            if (flag == -1) LoginEvens.RaiseEvent(-1, "初始化失败");
+
             bool result = false;
             try
             {
@@ -129,6 +154,7 @@ namespace GDXJ.Lib.Object.Login
                         };
                         result = true;
                         this.LoginCompleted = true;
+                        LoginEvens.RaiseEvent(0, "");
                     }
                     else
                     {
@@ -138,15 +164,14 @@ namespace GDXJ.Lib.Object.Login
                         if (matchCollection.Count > 0)
                         {
                             LoginInfo= matchCollection[0].Groups["info"].Value;
-                            SplashScreenHelper.Instance.HideSplashScreen();
-                            System.Windows.MessageBox.Show(LoginInfo, "登录错误", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+                            if (flag == -1) LoginEvens.RaiseEvent(-1, LoginInfo);
                         }
                     }
                 }
             }
-            catch
+            catch (Exception e)
             {
-                throw (new Exception("Get VerificationCodeImage error!"));
+                LoginEvens.RaiseEvent(-1, e.Message);
             }
             return result;
         }

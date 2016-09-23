@@ -11,6 +11,8 @@ namespace GDXJ.Lib.Lib
 {
     public class Gdxj
     {
+        int flag = 0;
+
         Login_Gdxj login;
         MyCookie myCookie;
         GdxjUser gdxjUser;
@@ -35,10 +37,17 @@ namespace GDXJ.Lib.Lib
 
         public Gdxj()
         {
-            Photo.InitPath();
-            myCookie = new MyCookie();
-            gdxjUser = new GdxjUser();
-            login = new Login_Gdxj(gdxjUser, myCookie);
+            try
+            {
+                Photo.InitPath();
+                myCookie = new MyCookie();
+                gdxjUser = new GdxjUser();
+                login = new Login_Gdxj(gdxjUser, myCookie);
+            }
+            catch
+            {
+                flag = -1;
+            }           
         }
 
         public List<Grade> QueryGrade()
