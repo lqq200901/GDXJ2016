@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModels\MainViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -94,6 +95,28 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Icon\Student.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GDXJ.Lib\GDXJ.Lib.csproj">
+      <Project>{04208704-537d-4586-aea0-358d53b742f9}</Project>
+      <Name>GDXJ.Lib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Newtonsoft.Json\Newtonsoft.Json.Net40.csproj">
+      <Project>{a9ae40ff-1a21-414a-9fe7-3be13644cc6d}</Project>
+      <Name>Newtonsoft.Json.Net40</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\QQLib\QQLib.csproj">
+      <Project>{23866143-5b70-4363-b282-2f733d5c5e9c}</Project>
+      <Name>QQLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ViewModelLibrary\ViewModelLibrary.csproj">
+      <Project>{a165db8b-831f-4e25-80ff-6b018e8ceed0}</Project>
+      <Name>ViewModelLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

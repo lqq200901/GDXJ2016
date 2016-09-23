@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{04208704-537D-4586-AEA0-358D53B742F9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GDXJ.Lib</RootNamespace>
+    <AssemblyName>GDXJ.Lib</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="GDXJEvens.cs" />
+    <Compile Include="Object\AjaxCommand\Command.cs" />
+    <Compile Include="Object\AjaxCommand\Data\SaveStudent_StudentData.cs" />
+    <Compile Include="Object\AjaxCommand\ICommandParams.cs" />
+    <Compile Include="Object\AjaxCommand\IJavaClass.cs" />
+    <Compile Include="Object\AjaxCommand\IMap.cs" />
+    <Compile Include="Object\AjaxCommand\IReceiveDataClass.cs" />
+    <Compile Include="Object\AjaxCommand\ISendDataClass.cs" />
+    <Compile Include="Object\AjaxCommand\Receive\BjRecord.cs" />
+    <Compile Include="Object\AjaxCommand\Receive\DataRecord.cs" />
+    <Compile Include="Object\AjaxCommand\Receive\Field.cs" />
+    <Compile Include="Object\AjaxCommand\Receive\MetaData.cs" />
+    <Compile Include="Object\AjaxCommand\Receive\NjRecord.cs" />
+    <Compile Include="Object\AjaxCommand\Receive\ReceiveBjDataClass.cs" />
+    <Compile Include="Object\AjaxCommand\Receive\ReceiveClassesDataClass.cs" />
+    <Compile Include="Object\AjaxCommand\Receive\ReceiveDictDataClass.cs" />
+    <Compile Include="Object\AjaxCommand\Receive\ReceiveGradeDataClass.cs" />
+    <Compile Include="Object\AjaxCommand\Receive\ReceiveNjDataClass.cs" />
+    <Compile Include="Object\AjaxCommand\Receive\ReceiveOrganNameClass.cs" />
+    <Compile Include="Object\AjaxCommand\Receive\ReceiveSchoolInfoClass.cs" />
+    <Compile Include="Object\AjaxCommand\Receive\ReceiveStudentDataClass.cs" />
+    <Compile Include="Object\AjaxCommand\Receive\ReceiveXsDataClass.cs" />
+    <Compile Include="Object\AjaxCommand\Receive\XsRecord.cs" />
+    <Compile Include="Object\AjaxCommand\Send\CommandParams.cs" />
+    <Compile Include="Object\AjaxCommand\Send\ContextCommandParams.cs" />
+    <Compile Include="Object\AjaxCommand\Send\GetDictClass.cs" />
+    <Compile Include="Object\AjaxCommand\Send\GetFamilyMembers_SendData.cs" />
+    <Compile Include="Object\AjaxCommand\Send\GetStudentPhoto_SendData.cs" />
+    <Compile Include="Object\AjaxCommand\Send\ListClassClass.cs" />
+    <Compile Include="Object\AjaxCommand\Send\ListGradeClass.cs" />
+    <Compile Include="Object\AjaxCommand\Send\ListStudentClass.cs" />
+    <Compile Include="Object\AjaxCommand\Send\SaveStudentCDClass.cs" />
+    <Compile Include="Object\AjaxCommand\Send\SendDataClass.cs" />
+    <Compile Include="Object\AjaxCommand\Send\SendSetting\SendDataSetting.cs" />
+    <Compile Include="Object\Classes.cs" />
+    <Compile Include="Object\Csrf.cs" />
+    <Compile Include="Object\Economics.cs" />
+    <Compile Include="Object\Family.cs" />
+    <Compile Include="Gdxj.cs" />
+    <Compile Include="Object\Grade.cs" />
+    <Compile Include="Object\IRollObj.cs" />
+    <Compile Include="Object\Login\login_gdxj.cs" />
+    <Compile Include="Object\Photo.cs" />
+    <Compile Include="Object\Search.cs" />
+    <Compile Include="Object\setting\const.cs" />
+    <Compile Include="Object\setting\Dict.cs" />
+    <Compile Include="Object\setting\Path.cs" />
+    <Compile Include="Object\setting\url.cs" />
+    <Compile Include="Object\Student.cs" />
+    <Compile Include="Object\StudentInfo.cs" />
+    <Compile Include="Object\SystemInfo.cs" />
+    <Compile Include="Object\TreeObject.cs" />
+    <Compile Include="Object\User\AccountObj.cs" />
+    <Compile Include="Object\User\GdxjAccount.cs" />
+    <Compile Include="Object\User\GdxjUser.cs" />
+    <Compile Include="Object\User\Organ.cs" />
+    <Compile Include="Object\User\ZxxsUsersExt.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Object\AjaxCommand\CommandParams\" />
+    <Folder Include="Object\AjaxCommand\JavaClass\" />
+    <Folder Include="Object\AjaxCommand\Map\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Newtonsoft.Json\Newtonsoft.Json.Net40.csproj">
+      <Project>{a9ae40ff-1a21-414a-9fe7-3be13644cc6d}</Project>
+      <Name>Newtonsoft.Json.Net40</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\QQLib\QQLib.csproj">
+      <Project>{23866143-5B70-4363-B282-2F733D5C5E9C}</Project>
+      <Name>QQLib</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

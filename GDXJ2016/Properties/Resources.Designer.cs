@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace GDXJ2016.Properties
+namespace GDXJ.Lib2016.Properties
 {
 
 
