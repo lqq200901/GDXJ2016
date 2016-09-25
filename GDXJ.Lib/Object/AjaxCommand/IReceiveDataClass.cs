@@ -1,8 +1,8 @@
-﻿using System;
+﻿using GDXJ.Lib.Object.AjaxCommand.Receive;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using gdxj.Object.AjaxCommand.Receive;
 
 namespace GDXJ.Lib.Object.AjaxCommand
 {

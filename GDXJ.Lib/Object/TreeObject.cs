@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using DevExpress.Mvvm;
 
 namespace GDXJ.Lib.Object
 {
-    public class TreeObject:BindableBase
+    public class TreeObject
     {
         public string ID
         {

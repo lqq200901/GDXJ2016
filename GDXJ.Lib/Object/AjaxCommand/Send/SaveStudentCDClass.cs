@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using gdxj.Object.AjaxCommand.Data;
 using System.Net;
+using GDXJ.Lib.Object.AjaxCommand.Data;
 
 namespace GDXJ.Lib.Object.AjaxCommand.Send
 {

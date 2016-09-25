@@ -7,8 +7,12 @@ using System;
 using System.Text;
 using System.Security.Cryptography;
 using GDXJ.Lib.Object.User;
-using GDXJ.Lib.Lib;
+using GDXJ.Lib;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using JumpKick.HttpLib;
+using JumpKick.HttpLib.Builder;
+using System.Windows;
 
 namespace GDXJ.Lib.Object.Login
 {
@@ -42,6 +46,7 @@ namespace GDXJ.Lib.Object.Login
         {
             try
             {
+                LoginEvens = new GDXJEvens();
                 this.myCookie = cookie;
                 this.gdxjUser = gdxjUser;
                 this.LoginCompleted = false;
@@ -72,40 +77,39 @@ namespace GDXJ.Lib.Object.Login
         /// </summary>
         void GetKey()
         {
-            try
-            {
-                string html = RequestHelper.SendDataByGET(setting.url.indexUrl, "", ref myCookie.cookie);
-                var r = new Regex(@"var.=?salt.+?""(?<pwKey>.+?)"".+?_username.value,'(?<key1>.+?)','(?<key2>.+?)','(?<key3>.+?)'", RegexOptions.IgnoreCase | RegexOptions.Singleline);
-                var matchCollection = r.Matches(html);
-                if (matchCollection.Count > 0)
+                Http.Get(setting.url.indexUrl).OnSuccess(result =>
                 {
-                    passwordKey = matchCollection[0].Groups["pwKey"].Value;
-                    usernameKey1 = matchCollection[0].Groups["key1"].Value;
-                    usernameKey2 = matchCollection[0].Groups["key2"].Value;
-                    usernameKey3 = matchCollection[0].Groups["key3"].Value;
-                    GetKeyCompleted = true;
-                }
-            }
-            catch
-            {
-                throw (new Exception("Get key error!"));
-            }
+                    try
+                    {
+                        var r = new Regex(@"var.=?salt.+?""(?<pwKey>.+?)"".+?_username.value,'(?<key1>.+?)','(?<key2>.+?)','(?<key3>.+?)'", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                        var matchCollection = r.Matches(result);
+                        if (matchCollection.Count > 0)
+                        {
+                            passwordKey = matchCollection[0].Groups["pwKey"].Value;
+                            usernameKey1 = matchCollection[0].Groups["key1"].Value;
+                            usernameKey2 = matchCollection[0].Groups["key2"].Value;
+                            usernameKey3 = matchCollection[0].Groups["key3"].Value;
+                            GetKeyCompleted = true;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        flag = -1;
+                    }
+                }).Go();
+                //string html = RequestHelper.SendDataByGET(setting.url.indexUrl, "", ref myCookie.cookie);
         }
 
-        ImageSource GetVerificationCodeImage()
+        void GetVerificationCodeImage(Action<BitmapImage> action)
         {
-            System.Windows.Media.Imaging.BitmapImage image = new System.Windows.Media.Imaging.BitmapImage();
-            try
+            Http.Get(setting.url.verificationCodeImageUrl).OnSuccess((WebHeaderCollection headers, Stream stream) =>
             {
+                BitmapImage image = new System.Windows.Media.Imaging.BitmapImage();
                 image.BeginInit();
-                image.StreamSource = RequestHelper.GetStream(setting.url.verificationCodeImageUrl, ref myCookie.cookie);
+                image.StreamSource = stream;
                 image.EndInit();
-            }
-            catch
-            {
-                throw (new Exception("Get VerificationCodeImage error!"));
-            }
-            return image;
+                action(image);
+            }).Go();
         }
 
         public bool Login()
@@ -113,66 +117,83 @@ namespace GDXJ.Lib.Object.Login
             if (flag == -1) LoginEvens.RaiseEvent(-1, "初始化失败");
 
             bool result = false;
-            try
+
+            RequestBuilder rb = new RequestBuilder(setting.url.loginCheckUrl, HttpVerb.Post).Body(LoginPostString());
+            rb.AddHeader("Referer", setting.url.loginCheckUrl);
+            rb.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            rb.OnSuccess(html =>
             {
-                string html = RequestHelper.GetXmlDataByPost(setting.url.loginCheckUrl, LoginPostString(), ref myCookie.cookie, setting.url.loginCheckUrl);
-
-                var r = new Regex(@"""(?<url>http:.+?)""", RegexOptions.IgnoreCase | RegexOptions.Singleline);
-                var matchCollection = r.Matches(html);
-                string url;
-                if (matchCollection.Count > 0)
+                try
                 {
-                    url = matchCollection[0].Groups["url"].Value;
-                    html = RequestHelper.SendDataByGET(url, LoginPostString(), ref myCookie.cookie, setting.url.loginCheckUrl);
-                    r = new Regex("userId:'(?<userId>.+?)',userName:'(?<userName>.+?)',userType:'(?<userType>.+?)',employeeId:'(?<employeeId>.+?)',regionCode:'(?<regionCode>.+?)',regionName:'(?<regionName>.+?)',organ:{organCode:'(?<organCode>.+?)',organName:'(?<organName>.+?)',organType:'(?<organType>.+?)',parentCode:'(?<parentCode>.+?)',level:(?<level>.+?)},zxxsUsersExt:{userAlias:'(?<userAlias>.+?)',userId:'(?<userAliasId>.+?)',userAliasName:'(?<userAliasName>.+?)',createTime:'(?<createTime>.+?)',skinPath:'(?<skinPath>.+?)'}}", RegexOptions.IgnoreCase | RegexOptions.Singleline);
-                    matchCollection = r.Matches(html);
-
+                    var r = new Regex(@"""(?<url>http:.+?)""", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                    var matchCollection = r.Matches(html);
+                    string url;
                     if (matchCollection.Count > 0)
                     {
-                        gdxjUser.employeeId = matchCollection[0].Groups["employeeId"].Value;
-                        gdxjUser.regionCode = matchCollection[0].Groups["regionCode"].Value;
-                        gdxjUser.regionName = matchCollection[0].Groups["regionName"].Value;
-                        gdxjUser.userId = matchCollection[0].Groups["userId"].Value;
-                        gdxjUser.userName = matchCollection[0].Groups["userName"].Value;
-                        gdxjUser.userType = matchCollection[0].Groups["userType"].Value;
+                        url = matchCollection[0].Groups["url"].Value;
 
-                        gdxjUser.organ = new User.Organ()
+                        RequestBuilder rb_info = new RequestBuilder(url, HttpVerb.Post).Body(LoginPostString());
+                        rb_info.AddHeader("Referer", setting.url.loginCheckUrl);
+                        rb_info.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+
+                        rb_info.OnSuccess(html_info =>
                         {
-                            level = matchCollection[0].Groups["level"].Value,
-                            organCode = matchCollection[0].Groups["organCode"].Value,
-                            organName = matchCollection[0].Groups["organName"].Value,
-                            organType = matchCollection[0].Groups["organType"].Value,
-                            parentCode = matchCollection[0].Groups["parentCode"].Value
-                        };
-                        gdxjUser.zxxsUsersExt = new User.ZxxsUsersExt()
-                        {
-                            createTime = matchCollection[0].Groups["createTime"].Value,
-                            skinPath = matchCollection[0].Groups["skinPath"].Value,
-                            userAlias = matchCollection[0].Groups["userAlias"].Value,
-                            userAliasName = matchCollection[0].Groups["userAliasName"].Value,
-                            userId = matchCollection[0].Groups["userAliasId"].Value
-                        };
-                        result = true;
-                        this.LoginCompleted = true;
-                        LoginEvens.RaiseEvent(0, "");
-                    }
-                    else
-                    {
-                        this.LoginCompleted = false;
-                        r = new Regex("UNSELECTABLE.+?>(?<info>.+?)<", RegexOptions.IgnoreCase | RegexOptions.Singleline);
-                        matchCollection = r.Matches(html);
-                        if (matchCollection.Count > 0)
-                        {
-                            LoginInfo= matchCollection[0].Groups["info"].Value;
-                            if (flag == -1) LoginEvens.RaiseEvent(-1, LoginInfo);
-                        }
+                            r = new Regex("userId:'(?<userId>.+?)',userName:'(?<userName>.+?)',userType:'(?<userType>.+?)',employeeId:'(?<employeeId>.+?)',regionCode:'(?<regionCode>.+?)',regionName:'(?<regionName>.+?)',organ:{organCode:'(?<organCode>.+?)',organName:'(?<organName>.+?)',organType:'(?<organType>.+?)',parentCode:'(?<parentCode>.+?)',level:(?<level>.+?)},zxxsUsersExt:{userAlias:'(?<userAlias>.+?)',userId:'(?<userAliasId>.+?)',userAliasName:'(?<userAliasName>.+?)',createTime:'(?<createTime>.+?)',skinPath:'(?<skinPath>.+?)'}}", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                            matchCollection = r.Matches(html_info);
+
+                            if (matchCollection.Count > 0)
+                            {
+                                gdxjUser.employeeId = matchCollection[0].Groups["employeeId"].Value;
+                                gdxjUser.regionCode = matchCollection[0].Groups["regionCode"].Value;
+                                gdxjUser.regionName = matchCollection[0].Groups["regionName"].Value;
+                                gdxjUser.userId = matchCollection[0].Groups["userId"].Value;
+                                gdxjUser.userName = matchCollection[0].Groups["userName"].Value;
+                                gdxjUser.userType = matchCollection[0].Groups["userType"].Value;
+
+                                gdxjUser.organ = new User.Organ()
+                                {
+                                    level = matchCollection[0].Groups["level"].Value,
+                                    organCode = matchCollection[0].Groups["organCode"].Value,
+                                    organName = matchCollection[0].Groups["organName"].Value,
+                                    organType = matchCollection[0].Groups["organType"].Value,
+                                    parentCode = matchCollection[0].Groups["parentCode"].Value
+                                };
+                                gdxjUser.zxxsUsersExt = new User.ZxxsUsersExt()
+                                {
+                                    createTime = matchCollection[0].Groups["createTime"].Value,
+                                    skinPath = matchCollection[0].Groups["skinPath"].Value,
+                                    userAlias = matchCollection[0].Groups["userAlias"].Value,
+                                    userAliasName = matchCollection[0].Groups["userAliasName"].Value,
+                                    userId = matchCollection[0].Groups["userAliasId"].Value
+                                };
+                                result = true;
+                                this.LoginCompleted = true;
+                                LoginEvens.RaiseEvent(0, "");
+                            }
+                            else
+                            {
+                                this.LoginCompleted = false;
+                                r = new Regex("UNSELECTABLE.+?>(?<info>.+?)<", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                                matchCollection = r.Matches(html);
+                                if (matchCollection.Count > 0)
+                                {
+                                    LoginInfo = matchCollection[0].Groups["info"].Value;
+                                    if (flag == -1) LoginEvens.RaiseEvent(-1, LoginInfo);
+                                }
+                            }
+                        }).Go();
                     }
                 }
-            }
-            catch (Exception e)
+                catch (Exception e)
+                {
+                    LoginEvens.RaiseEvent(-1, e.Message);
+                }
+            }).OnFail(webexception =>
             {
-                LoginEvens.RaiseEvent(-1, e.Message);
-            }
+                System.Diagnostics.Debug.Write(webexception.Message);
+                LoginEvens.RaiseEvent(-1, webexception.Message);
+            }).Go();
             return result;
         }
 
@@ -187,10 +208,19 @@ namespace GDXJ.Lib.Object.Login
                 VerificationCode);
         }
 
-        public ImageSource VerificationCodeImageRefresh()
+        //private string PasswordToMD5()
+        //{
+        //    MD5 md5 = new MD5CryptoServiceProvider();
+        //    return (BitConverter.ToString(md5.ComputeHash(Encoding.Default.GetBytes(Password + "{" + passwordKey + "}"))).Replace("-", "")).ToLower();
+        //}
+
+        public void VerificationCodeImageRefresh()
         {
-            VerificationCodeImage = GetVerificationCodeImage();
-            return VerificationCodeImage;
+            GetVerificationCodeImage(img =>
+                {
+                    VerificationCodeImage = img;
+                    LoginEvens.RaiseEvent(1, "VerificationCodeImageRefresh");
+                });
         }
 
         public void Logout()

@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using QQLib.Http;
-using gdxj.Object.setting;
 using System.Net;
+using GDXJ.Lib.Object.setting;
+using GDXJ.Lib.Object.AjaxCommand.Receive;
 
 namespace GDXJ.Lib.Object
 {
@@ -123,7 +124,7 @@ namespace GDXJ.Lib.Object
         public int total { get; set; }
         public string javaClass { get; set; }
         public bool success { get; set; }
-        public gdxj.Object.AjaxCommand.Receive.MetaData metaData { get; set; }
+        public MetaData metaData { get; set; }
         public List<FamilyMember> rows { get; set; }
     }
 }

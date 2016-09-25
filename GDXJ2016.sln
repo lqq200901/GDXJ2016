@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GDXJ2016", "GDXJ2016\GDXJ2016.csproj", "{3C36F88B-A475-49E9-B6AE-C4929C2D7842}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QQLib", "QQLib\QQLib.csproj", "{23866143-5B70-4363-B282-2F733D5C5E9C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newtonsoft.Json.Net40", "Newtonsoft.Json\Newtonsoft.Json.Net40.csproj", "{A9AE40FF-1A21-414A-9FE7-3BE13644CC6D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JumpKick.HttpLib", "JumpKick.HttpLib\JumpKick.HttpLib.csproj", "{D626C4EC-D793-4541-8631-1AF678A29490}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{A9AE40FF-1A21-414A-9FE7-3BE13644CC6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9AE40FF-1A21-414A-9FE7-3BE13644CC6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9AE40FF-1A21-414A-9FE7-3BE13644CC6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D626C4EC-D793-4541-8631-1AF678A29490}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D626C4EC-D793-4541-8631-1AF678A29490}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D626C4EC-D793-4541-8631-1AF678A29490}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D626C4EC-D793-4541-8631-1AF678A29490}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

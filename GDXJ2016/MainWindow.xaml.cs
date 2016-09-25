@@ -1,7 +1,7 @@
 ﻿using GDXJ2016.ViewModels;
 using System.Windows;
 
-namespace GDXJ.Lib2016
+namespace GDXJ2016
 {
     /// <summary>
     /// MainWindow.xaml 的交互逻辑

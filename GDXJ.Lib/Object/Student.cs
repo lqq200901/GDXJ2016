@@ -1,13 +1,13 @@
 ﻿using System;
-using gdxj.Object.AjaxCommand.Receive;
 using System.Net;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using QQLib.Http;
-using gdxj.Object.AjaxCommand.Data;
 using QQLib.Collection;
 using System.Windows.Media;
-using gdxj.Object.setting;
+using GDXJ.Lib.Object.AjaxCommand.Receive;
+using GDXJ.Lib.Object.setting;
+using GDXJ.Lib.Object.AjaxCommand.Data;
 
 namespace GDXJ.Lib.Object
 {

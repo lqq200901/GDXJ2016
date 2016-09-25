@@ -1,10 +1,9 @@
 ﻿using System.Net;
 using Newtonsoft.Json;
-using gdxj.Object.AjaxCommand.Send;
 using QQLib.Http;
 using System;
-using gdxj.Object.AjaxCommand;
 using System.Collections.Generic;
+using GDXJ.Lib.Object.AjaxCommand.Send;
 
 namespace GDXJ.Lib.Object
 {

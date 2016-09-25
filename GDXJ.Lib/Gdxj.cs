@@ -7,7 +7,7 @@ using GDXJ.Lib.Object.Login;
 using GDXJ.Lib.Object;
 using GDXJ.Lib.Object.setting;
 
-namespace GDXJ.Lib.Lib
+namespace GDXJ.Lib
 {
     public class Gdxj
     {
@@ -48,6 +48,11 @@ namespace GDXJ.Lib.Lib
             {
                 flag = -1;
             }           
+        }
+
+        public void RegistrationIsCompleted()
+        {
+
         }
 
         public List<Grade> QueryGrade()

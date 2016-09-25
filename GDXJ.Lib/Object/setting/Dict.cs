@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using QQLib.Http;
-using GDXJ.Lib.Lib;
+using GDXJ.Lib;
 using GDXJ.Lib.Object.AjaxCommand.Send;
 using GDXJ.Lib.Object.AjaxCommand.Send.SendSetting;
 using Newtonsoft.Json;

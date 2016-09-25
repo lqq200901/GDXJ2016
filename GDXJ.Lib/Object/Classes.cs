@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
-using gdxj.Object.AjaxCommand.Receive;
 using System.Net;
 using QQLib.Http;
-using QQLib.Collection;
-using DevExpress.Mvvm;
+using GDXJ.Lib.Object.AjaxCommand.Receive;
 
 namespace GDXJ.Lib.Object
 {

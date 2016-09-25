@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using QQLib.Http;
-using gdxj.Object.setting;
 using System.Net;
 using System.Windows.Media;
 using System.IO;
+using GDXJ.Lib.Object.setting;
+using System.Windows.Forms;
 
 namespace GDXJ.Lib.Object
 {
@@ -35,7 +36,7 @@ namespace GDXJ.Lib.Object
             }
             catch(Exception e)
             {
-                System.Windows.MessageBox.Show(e.Message);
+                MessageBox.Show(e.Message);
                 //throw (new Exception("Get VerificationCodeImage error!"));
             }
             return image;
@@ -67,7 +68,7 @@ namespace GDXJ.Lib.Object
             }
             catch (Exception e)
             {
-                System.Windows.MessageBox.Show(e.Message);
+                MessageBox.Show(e.Message);
                 //throw (new Exception("Get VerificationCodeImage error!"));
             }
             return fileName;

@@ -1,18 +1,17 @@
 ﻿using GDXJ.Lib;
+using OA.CCJY.Module;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using ViewModelLibrary;
 
-namespace GDXJ.Lib2016.ViewModels
+namespace GDXJ2016.ViewModels
 {
     class MainViewModel : ViewModelBase
     {
         private List<IModule> Models = new List<IModule>();
-        //private CCOA ccoa;
+        private Gdxj gdxj;
         
 
         #region 命令
@@ -52,7 +51,7 @@ namespace GDXJ.Lib2016.ViewModels
         {
             try
             {
-                //ccoa = new CCOA();
+                gdxj = new Gdxj();
 
                 Initialization();
 
@@ -67,7 +66,7 @@ namespace GDXJ.Lib2016.ViewModels
                 DeliveryCommand = new DelegateCommand(() => SelectedModuleNumber = 4) { IsEnabled = false };
                 SetupCommand = new DelegateCommand(() => SelectedModuleNumber = 5) { IsEnabled = true };
 
-                //Models.Add(new LoginModule(ccoa));
+                Models.Add(new LoginModule(gdxj));
                 //Models.Add(new OverviewModule(ccoa));
                 //Models.Add(new MailModule(ccoa));
                 //Models.Add(new NewMailBoxModule(ccoa));

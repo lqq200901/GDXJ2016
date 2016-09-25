@@ -5,7 +5,8 @@ using System.Text;
 using System.Net;
 using Newtonsoft.Json;
 using QQLib.Http;
-using gdxj.Object.setting;
+using GDXJ.Lib.Object.setting;
+using GDXJ.Lib.Object.AjaxCommand.Receive;
 
 namespace GDXJ.Lib.Object
 {
@@ -71,7 +72,7 @@ namespace GDXJ.Lib.Object
         public int total { get; set; }
         public string javaClass { get; set; }
         public bool success { get; set; }
-        public gdxj.Object.AjaxCommand.Receive.MetaData metaData { get; set; }
+        public MetaData metaData { get; set; }
         public List<Economics> rows { get; set; }
     }
 }

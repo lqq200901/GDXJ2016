@@ -4,10 +4,9 @@ using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System;
 using Newtonsoft.Json;
-using gdxj.Object.AjaxCommand.Receive;
 using QQLib.Collection;
 using System.Windows;
-using DevExpress.Mvvm;
+using GDXJ.Lib.Object.AjaxCommand.Receive;
 
 namespace GDXJ.Lib.Object
 {

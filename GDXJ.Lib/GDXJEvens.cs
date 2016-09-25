@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GDXJ.Lib.Lib
+namespace GDXJ.Lib
 {
     public class GDXJEvens
     {
