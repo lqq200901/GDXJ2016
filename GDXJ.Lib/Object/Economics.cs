@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using QQLib.Http;
 using GDXJ.Lib.Object.setting;
 using GDXJ.Lib.Object.AjaxCommand.Receive;
+using JumpKick.HttpLib;
 
 namespace GDXJ.Lib.Object
 {
@@ -51,7 +52,12 @@ namespace GDXJ.Lib.Object
             {
                 AjaxCommand.Send.ContextCommandParams sendData = new AjaxCommand.Send.ContextCommandParams() { @params = new AjaxCommand.Send.GetFamilyMembers_SendData(studentId) };
                 string json = JsonConvert.SerializeObject(sendData, Formatting.Indented);
-                string html = RequestHelper.GetByPostJson(url.GetEconomicsUrl, json, ref cookie, url.QueryGradeRefererUrl);
+
+                var req = Http.Post(url.GetEconomicsUrl).Body(json);
+                req.AddHeader("Referer", url.QueryGradeRefererUrl);
+                req.AddHeader("_ccrf.token", Csrf.GetCsrfToken());
+                string html = req.RealTimeGo().RequestString;
+
                 GetEconomics_ReceiveData receiveStudentData = JsonConvert.DeserializeObject<GetEconomics_ReceiveData>(html);
                 result = receiveStudentData.rows;
             }

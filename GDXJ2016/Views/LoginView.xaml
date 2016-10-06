@@ -23,7 +23,7 @@
             <ColumnDefinition Width="200"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <TextBlock Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Top" FontSize="14" Margin="5" Foreground="Red" Text="{Binding LoginInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBlock Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Top" FontSize="14" Margin="5" Foreground="Red" TextWrapping="Wrap" Text="{Binding LoginInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" FontSize="14" Margin="5">用户名：</TextBlock>
         <TextBlock Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" FontSize="14" Margin="5">密　码：</TextBlock>
         <TextBlock Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" FontSize="14" Margin="5">验证码：</TextBlock>

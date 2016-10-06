@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using QQLib.Collection;
 using System.Windows;
 using GDXJ.Lib.Object.AjaxCommand.Receive;
+using JumpKick.HttpLib;
 
 namespace GDXJ.Lib.Object
 {
@@ -100,7 +101,13 @@ namespace GDXJ.Lib.Object
             {
                 AjaxCommand.Send.CommandParams param = new AjaxCommand.Send.CommandParams() { @params = lgc };
                 string json = JsonConvert.SerializeObject(param, Formatting.Indented);
-                string html = RequestHelper.GetByPostJsonWithCsrf(setting.url.ZxxsXxNjxxQueryUrl, json, ref cookie,Csrf.GetCsrfToken(ref cookie) , setting.url.QueryGradeRefererUrl);
+
+                var req = Http.Post(setting.url.ZxxsXxNjxxQueryUrl).Body(json);
+                req.AddHeader("Referer", setting.url.QueryGradeRefererUrl);
+                req.AddHeader("_ccrf.token", Csrf.GetCsrfToken());
+                string html = req.RealTimeGo().RequestString;
+
+                //html = RequestHelper.GetByPostJsonWithCsrf(setting.url.ZxxsXxNjxxQueryUrl, json, ref cookie,Csrf.GetCsrfToken() , setting.url.QueryGradeRefererUrl);
                 ReceiveGradeDataClass receiveGrade = JsonConvert.DeserializeObject<ReceiveGradeDataClass>(html);
                 result = receiveGrade.rows;
             }

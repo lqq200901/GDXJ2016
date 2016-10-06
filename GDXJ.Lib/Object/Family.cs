@@ -7,6 +7,7 @@ using QQLib.Http;
 using System.Net;
 using GDXJ.Lib.Object.setting;
 using GDXJ.Lib.Object.AjaxCommand.Receive;
+using JumpKick.HttpLib;
 
 namespace GDXJ.Lib.Object
 {
@@ -19,7 +20,12 @@ namespace GDXJ.Lib.Object
             {
                 AjaxCommand.Send.ContextCommandParams sendData = new AjaxCommand.Send.ContextCommandParams() { @params = new AjaxCommand.Send.GetFamilyMembers_SendData(studentId) };
                 string json = JsonConvert.SerializeObject(sendData, Formatting.Indented);
-                string html = RequestHelper.GetByPostJsonWithCsrf(url.GetFamilyMembersUrl, json, ref cookie, Csrf.GetCsrfToken(ref cookie), url.QueryGradeRefererUrl);
+
+                var req = Http.Post(setting.url.GetFamilyMembersUrl).Body(json);
+                req.AddHeader("Referer", setting.url.QueryGradeRefererUrl);
+                req.AddHeader("_ccrf.token", Csrf.GetCsrfToken());
+                string html = req.RealTimeGo().RequestString;
+
                 GetFamilyMembers_ReceiveData receiveStudentData = JsonConvert.DeserializeObject<GetFamilyMembers_ReceiveData>(html);
                 result = receiveStudentData.rows;
             }

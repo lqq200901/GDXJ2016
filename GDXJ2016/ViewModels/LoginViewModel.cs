@@ -67,7 +67,9 @@ namespace GDXJ2016.ViewModels
                 return gdxj.Login.VerificationCodeImage;
             }
 
-            set { OnPropertyChanged("VerificationCodeImage"); }
+            set { 
+                OnPropertyChanged("VerificationCodeImage");
+            }
         }
 
         private bool savePassword = false;
@@ -107,20 +109,18 @@ namespace GDXJ2016.ViewModels
                 gdxj.Login.Login();
             }) { IsEnabled = false };
 
-            Username = "linqingqiang3416";
-            Password = "12345678";
+            Username = "1529553";
+            Password = "123456b?";
 
-            gdxj.Login.Subscribe(Login);
+            gdxj.Subscribe(Login);
+            gdxj.Initialization();
         }
 
         private void Login(object sender, GDXJ.Lib.GDXJEvens.GDXJEvenArgs e)
         {
             if (e.ResultToRaiseEvent ==1)
             {
-                Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    //VerificationCodeImage = new BitmapImage();
-                }));    
+                VerificationCodeImage = new BitmapImage();
             }
             else if (e.ResultToRaiseEvent == 0)
             {
@@ -131,7 +131,9 @@ namespace GDXJ2016.ViewModels
                 LoginInfo = "错误：连接办公系统失败，\n"+e.MessageToRaiseEvent;
             }else if (e.ResultToRaiseEvent == -1)
             {
-                LoginInfo = "错误：系统初始化失败！\n";
+                LoginInfo = "错误："+e.MessageToRaiseEvent;
+                VerificationCode = "";
+                gdxj.Login.VerificationCodeImageRefresh();
             }
 
         }

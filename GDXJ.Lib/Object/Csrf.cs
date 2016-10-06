@@ -6,19 +6,20 @@ using System.Net;
 using QQLib.Http;
 using System.Text.RegularExpressions;
 using QQLib.Decoded;
+using JumpKick.HttpLib;
 
 namespace GDXJ.Lib.Object
 {
     public class Csrf
     {
         private static string csrfToken;
-        public static string GetCsrfToken(ref CookieContainer cookie)
+        public static string GetCsrfToken()
         {
             try
             {
                 if (csrfToken == string.Empty || csrfToken == null)
                 {
-                    string html = RequestHelper.SendDataByGET(setting.url.mainRUrl, "", ref cookie);
+                    var html = Http.Get(setting.url.mainRUrl).RealTimeGo().RequestString;
                     var r = new Regex(@"eval\('(?<jsStr>.+?)'", RegexOptions.IgnoreCase | RegexOptions.Singleline);
                     var matchCollection = r.Matches(html);
                     if (matchCollection.Count > 0)

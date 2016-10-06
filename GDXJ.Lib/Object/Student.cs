@@ -8,6 +8,7 @@ using System.Windows.Media;
 using GDXJ.Lib.Object.AjaxCommand.Receive;
 using GDXJ.Lib.Object.setting;
 using GDXJ.Lib.Object.AjaxCommand.Data;
+using JumpKick.HttpLib;
 
 namespace GDXJ.Lib.Object
 {
@@ -406,7 +407,12 @@ namespace GDXJ.Lib.Object
                 if (limit == 0) limit = AjaxCommand.Send.SendSetting.SendDataSetting.QS_limit;
                 AjaxCommand.Send.ContextCommandParams ccp = new AjaxCommand.Send.ContextCommandParams() { @params = new AjaxCommand.Send.ListStudentClass(schoolId, classesid, start, limit, grbsm) };
                 string json = JsonConvert.SerializeObject(ccp, Formatting.Indented);
-                string html = RequestHelper.GetByPostJsonWithCsrf(setting.url.ZxxsXsJbxxQueryUrl, json, ref cookie, Csrf.GetCsrfToken(ref cookie), setting.url.QueryGradeRefererUrl);
+
+                var req = Http.Post(setting.url.ZxxsXsJbxxQueryUrl).Body(json);
+                req.AddHeader("Referer", setting.url.QueryGradeRefererUrl);
+                req.AddHeader("_ccrf.token", Csrf.GetCsrfToken());
+                string html = req.RealTimeGo().RequestString;
+
                 ReceiveStudentDataClass receiveStudentData = JsonConvert.DeserializeObject<ReceiveStudentDataClass>(html);
                 result = receiveStudentData.rows;
             }
@@ -459,7 +465,12 @@ namespace GDXJ.Lib.Object
                 sscd.AddEconomicsRecord(ee);
                 AjaxCommand.Send.ContextCommandParams ccp = new AjaxCommand.Send.ContextCommandParams() { @params = sscd };
                 string json = JsonConvert.SerializeObject(ccp, Formatting.Indented);
-                string html = RequestHelper.GetByPostJsonWithCsrf(setting.url.SaveStudentInfoUrl, json, ref cookie, Csrf.GetCsrfToken(ref cookie), setting.url.QueryGradeRefererUrl);
+
+                var req = Http.Post(setting.url.SaveStudentInfoUrl).Body(json);
+                req.AddHeader("Referer", setting.url.QueryGradeRefererUrl);
+                req.AddHeader("_ccrf.token", Csrf.GetCsrfToken());
+                string html = req.RealTimeGo().RequestString;
+
                 //ReceiveStudentDataClass receiveStudentData = JsonConvert.DeserializeObject<ReceiveStudentDataClass>(html);
                 //result = receiveStudentData.rows;
 

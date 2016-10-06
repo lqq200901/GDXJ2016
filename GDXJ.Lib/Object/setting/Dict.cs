@@ -86,7 +86,7 @@ namespace GDXJ.Lib.Object.setting
             {
                 AjaxCommand.Send.ContextCommandParams ccp = new AjaxCommand.Send.ContextCommandParams() { @params = gdc };
                 string json = JsonConvert.SerializeObject(ccp, Formatting.Indented);
-                string html = RequestHelper.GetByPostJsonWithCsrf(url, json, ref xj.GdxjCookie.cookie, Csrf.GetCsrfToken(ref xj.GdxjCookie.cookie), setting.url.QueryGradeRefererUrl);
+                string html = RequestHelper.GetByPostJsonWithCsrf(url, json, ref xj.GdxjCookie.cookie, Csrf.GetCsrfToken(), setting.url.QueryGradeRefererUrl);
                 ReceiveDictDataClass receiveStudentData = JsonConvert.DeserializeObject<ReceiveDictDataClass>(html);
                 receiveStudentData.rows.ForEach(r =>
                     {
@@ -108,7 +108,7 @@ namespace GDXJ.Lib.Object.setting
             {
                 AjaxCommand.Send.ContextCommandParams ccp = new AjaxCommand.Send.ContextCommandParams() { @params = godc };
                 string json = JsonConvert.SerializeObject(ccp, Formatting.Indented);
-                string html = RequestHelper.GetByPostJsonWithCsrf(setting.url.QueryOrganDicUrl, json, ref xj.GdxjCookie.cookie, Csrf.GetCsrfToken(ref xj.GdxjCookie.cookie), setting.url.QueryGradeRefererUrl);
+                string html = RequestHelper.GetByPostJsonWithCsrf(setting.url.QueryOrganDicUrl, json, ref xj.GdxjCookie.cookie, Csrf.GetCsrfToken(), setting.url.QueryGradeRefererUrl);
                 ReceiveOrganNameClass receiveData = JsonConvert.DeserializeObject<ReceiveOrganNameClass>(html);
                 if(receiveData.map!=null)
                        result = receiveData.map.text;
@@ -128,7 +128,7 @@ namespace GDXJ.Lib.Object.setting
             {
                 AjaxCommand.Send.ContextCommandParams ccp = new AjaxCommand.Send.ContextCommandParams() { @params = gsic };
                 string json = JsonConvert.SerializeObject(ccp, Formatting.Indented);
-                string html = RequestHelper.GetByPostJsonWithCsrf(setting.url.QuerySchoolInfoUrl, json, ref xj.GdxjCookie.cookie, Csrf.GetCsrfToken(ref xj.GdxjCookie.cookie), setting.url.QueryGradeRefererUrl);
+                string html = RequestHelper.GetByPostJsonWithCsrf(setting.url.QuerySchoolInfoUrl, json, ref xj.GdxjCookie.cookie, Csrf.GetCsrfToken(), setting.url.QueryGradeRefererUrl);
                 result = JsonConvert.DeserializeObject<ReceiveSchoolInfoClass>(html);
             }
             catch (Exception e)

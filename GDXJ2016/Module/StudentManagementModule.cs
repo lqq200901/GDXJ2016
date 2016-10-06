@@ -1,31 +1,27 @@
 ﻿using GDXJ.Lib;
 using GDXJ2016.ViewModels;
 using GDXJ2016.Views;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Controls;
 using ViewModelLibrary;
 
 namespace GDXJ2016.Module
 {
-    class LoginModule : ModuleBase
+    class StudentManagementModule : ModuleBase
     {
         Gdxj gdxj;
-        public LoginModule(Gdxj gdxj)
+        public StudentManagementModule(Gdxj gdxj)
         {
             this.gdxj = gdxj;
         }
 
         protected override UserControl CreateViewAndViewModel()
         {
-            return new LoginView() { DataContext = new LoginViewModel(gdxj) };
+            return new StudentManagementView() { DataContext = new StudentManagementViewModel(gdxj) };
         }
 
         public override string Name
         {
-            get { return "登录系统"; }
+            get { return "学生管理"; }
         }
     }
 }

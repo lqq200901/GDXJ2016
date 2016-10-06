@@ -5,6 +5,7 @@
     using System.IO;
     using System.Net;
     using JumpKick.HttpLib.Streams;
+    using System.Text;
 
     public class Request
     {
@@ -95,6 +96,60 @@
             }
         }
 
+        public RequestData RealTimeGo()
+        {
+            return MakeRealTimeRequest(); ;
+        }
+
+        private RequestData MakeRealTimeRequest()
+        {
+            Stream stream=null;
+            try
+            {
+                HttpWebRequest request = CreateNewRequest();
+
+                if (method == HttpVerb.Get || method == HttpVerb.Head)
+                {
+                    stream = (request.GetResponse()).GetResponseStream();
+                }
+                else
+                {
+                    if (request.ContentType == null) request.ContentType = body.GetContentType();
+
+                    using (Stream myRequestStream = request.GetRequestStream())
+                    {
+                        var contentLength = body.GetBody().Length;
+                        byte[] bodyBytes = new byte[contentLength];
+                        body.GetBody().Read(bodyBytes, 0, bodyBytes.Length);
+                        body.GetBody().Seek(0, SeekOrigin.Begin);
+
+                        int maxLength = 500;
+                        int ec;
+                        for (int i = 0; i < contentLength; i += maxLength)
+                        {
+                            if (i + maxLength < contentLength) ec = 500; else ec = (int)contentLength - i;
+                            myRequestStream.Write(bodyBytes, i, ec);
+                        }
+                        HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                        stream = response.GetResponseStream();
+
+                        //using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                        //{
+                        //    stream = response.GetResponseStream();
+                        //}
+                    }
+                }
+            }
+            catch (WebException webEx)
+            {
+                if (action.Fail != null)
+                    action.Fail(webEx);
+                else
+                    throw webEx;
+            }
+            return new RequestData(stream);
+        }
+
         public void Go()
         {
             MakeRequest();
@@ -108,43 +163,9 @@
 
         protected void MakeRequest()
         {
-            if (string.IsNullOrWhiteSpace(url))
-            {
-                throw new ArgumentNullException("url is empty");
-            }
-
             try
             {
-                /*
-                 * Create new Request
-                 */
-                HttpWebRequest request = this.GetWebRequest(url);
-                request.CookieContainer = Cookies.Container;
-                request.Method = method.ToString().ToUpper();
-
-                if (Headers != null)
-                {
-                    var headersArray = Headers.GetHeaders();
-                    if (headersArray != null)
-                    {
-                        var headersList = new System.Collections.Generic.List<Header>(headersArray);
-                        foreach (var h in headersList)
-                        {
-                            switch(h.Name.ToLower())
-                            {
-                                case "referer":
-                                    request.Referer = h.Value;
-                                    break;
-                                case "content-type":
-                                    request.ContentType = h.Value;
-                                    break;
-                                default:
-                                    request.Headers.Set(h.Name, h.Value);
-                                    break;
-                            }
-                        }
-                    }
-                }
+                HttpWebRequest request = CreateNewRequest();
 
                 if (method == HttpVerb.Get || method == HttpVerb.Head) 
                 {
@@ -160,6 +181,45 @@
             {
                 action.Fail(webEx);
             }
+        }
+
+        private HttpWebRequest CreateNewRequest()
+        {
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                throw new ArgumentNullException("url is empty");
+            }
+            /*
+             * Create new Request
+             */
+            HttpWebRequest request = this.GetWebRequest(url);
+            request.CookieContainer = Cookies.Container;
+            request.Method = method.ToString().ToUpper();
+
+            if (Headers != null)
+            {
+                var headersArray = Headers.GetHeaders();
+                if (headersArray != null)
+                {
+                    var headersList = new System.Collections.Generic.List<Header>(headersArray);
+                    foreach (var h in headersList)
+                    {
+                        switch (h.Name.ToLower())
+                        {
+                            case "referer":
+                                request.Referer = h.Value;
+                                break;
+                            case "content-type":
+                                request.ContentType = h.Value;
+                                break;
+                            default:
+                                request.Headers.Set(h.Name, h.Value);
+                                break;
+                        }
+                    }
+                }
+            }
+            return request;
         }
 
         protected virtual void ExecuteRequestWithoutBody(HttpWebRequest request)

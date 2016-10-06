@@ -1,5 +1,5 @@
 ﻿using GDXJ.Lib;
-using OA.CCJY.Module;
+using GDXJ2016.Module;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -67,7 +67,7 @@ namespace GDXJ2016.ViewModels
                 SetupCommand = new DelegateCommand(() => SelectedModuleNumber = 5) { IsEnabled = true };
 
                 Models.Add(new LoginModule(gdxj));
-                //Models.Add(new OverviewModule(ccoa));
+                Models.Add(new StudentManagementModule(gdxj));
                 //Models.Add(new MailModule(ccoa));
                 //Models.Add(new NewMailBoxModule(ccoa));
                 //Models.Add(new DepartmentSetupModule(ccoa));
@@ -78,6 +78,8 @@ namespace GDXJ2016.ViewModels
             }
             catch (Exception e)
             {
+                if (gdxj != null)
+                    gdxj.Login.Logout();
                 MessageBox.Show("系统初始化失败\n"+e.Message,"系统运行错误",MessageBoxButton.OK,MessageBoxImage.Error);
                 Application.Current.Shutdown();
             }
@@ -93,6 +95,7 @@ namespace GDXJ2016.ViewModels
                 //ccoa.AttachTempPath = System.IO.Directory.GetCurrentDirectory() + Setting.System.GetSystemSetting("AttachTempPath");
                 //System.IO.Directory.CreateDirectory(ccoa.AttachSavePath);
                 //System.IO.Directory.CreateDirectory(ccoa.AttachTempPath);
+                gdxj.Subscribe(Login);
             }
             catch(Exception e)
             {
@@ -104,6 +107,8 @@ namespace GDXJ2016.ViewModels
 
         private void Login(object sender, GDXJEvens.GDXJEvenArgs e)
         {
+            if (e.ResultToRaiseEvent == 0)
+            {
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
                     SetupCommand.IsEnabled = true;
@@ -114,6 +119,7 @@ namespace GDXJ2016.ViewModels
                     LoginCommand.IsEnabled = true;
                     SelectedModuleNumber = 1;
                 }), null);
+            }
         }
     }
 }

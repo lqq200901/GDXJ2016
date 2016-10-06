@@ -7,7 +7,7 @@ namespace GDXJ.Lib.Object.setting
 {
     public static class url
     {
-        public static string domainUrl = @"http://202.116.225.44";
+        public static string domainUrl = @"http://gdxj.edugd.cn";
         public static string indexUrl = domainUrl + @"/jsp/public/login.jsp";
         public static string verificationCodeImageUrl = domainUrl + @"/jsp/public/imagegen.jsp";
         public static string loginCheckUrl = domainUrl + @"/j_bsp_security_check/caLdap";

@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.IO;
 using GDXJ.Lib.Object.setting;
 using System.Windows.Forms;
+using JumpKick.HttpLib;
 
 namespace GDXJ.Lib.Object
 {
@@ -31,7 +32,12 @@ namespace GDXJ.Lib.Object
                 string path=string.Format(downloadPath, GetPhotoPath(ref cookie, studentId));
                 string referer = string.Format(refererUrl, studentId, QQLib.Encoded.Url.UrlEncode(name));
                 image.BeginInit();
-                image.StreamSource = RequestHelper.GetStream(path, ref cookie, referer);
+
+                var req = Http.Get(path);
+                req.AddHeader("Referer", referer);
+                //req.AddHeader("_ccrf.token", Csrf.GetCsrfToken());
+
+                image.StreamSource = req.RealTimeGo().RequestStream;
                 image.EndInit();
             }
             catch(Exception e)
@@ -57,7 +63,10 @@ namespace GDXJ.Lib.Object
                 {
                     byte[] buffer = new byte[4096];
                     int read = 0;
-                    using (Stream responeStream = RequestHelper.GetStream(path, ref cookie, referer))
+                    var req = Http.Get(path);
+                    req.AddHeader("Referer", referer);
+
+                    using (Stream responeStream = req.RealTimeGo().RequestStream)
                     {
                         while ((read = responeStream.Read(buffer, 0, buffer.Length)) > 0)
                         {
@@ -81,7 +90,12 @@ namespace GDXJ.Lib.Object
             {
                 AjaxCommand.Send.ContextCommandParams sendData = new AjaxCommand.Send.ContextCommandParams() { @params = new AjaxCommand.Send.GetStudentPhoto_SendData(studentId) };
                 string json = JsonConvert.SerializeObject(sendData, Formatting.Indented);
-                string html = RequestHelper.GetByPostJsonWithCsrf(url.GetPhotoUrl, json, ref cookie, Csrf.GetCsrfToken(ref cookie), url.GetPhotoUrl);
+
+                var req = Http.Post(url.GetPhotoUrl).Body(json);
+                req.AddHeader("Referer", url.GetPhotoUrl);
+                req.AddHeader("_ccrf.token", Csrf.GetCsrfToken());
+                string html = req.RealTimeGo().RequestString;
+
                 Photo_ReceiveData receiveStudentData = JsonConvert.DeserializeObject<Photo_ReceiveData>(html);
                 if (receiveStudentData.map != null)
                 {

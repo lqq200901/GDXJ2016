@@ -1,9 +1,8 @@
 ﻿using System.Net;
 using Newtonsoft.Json;
-using QQLib.Http;
 using System;
-using System.Collections.Generic;
 using GDXJ.Lib.Object.AjaxCommand.Send;
+using JumpKick.HttpLib;
 
 namespace GDXJ.Lib.Object
 {
@@ -18,7 +17,12 @@ namespace GDXJ.Lib.Object
                 g.SetRegionCode(regionCode);
                 AjaxCommand.Send.ContextCommandParams param = new AjaxCommand.Send.ContextCommandParams() { @params = g };
                 string json = JsonConvert.SerializeObject(param, Formatting.Indented);
-                string html = RequestHelper.GetByPostJson(setting.url.GetRegionNameUrl, json, ref cookie, setting.url.QueryGradeRefererUrl);
+
+                var req = Http.Post(setting.url.GetRegionNameUrl).Body(json);
+                req.AddHeader("Referer", setting.url.QueryGradeRefererUrl);
+                req.AddHeader("_ccrf.token", Csrf.GetCsrfToken());
+                string html = req.RealTimeGo().RequestString;
+
                 GetRegionName_CommandReceiveData receive = JsonConvert.DeserializeObject<GetRegionName_CommandReceiveData>(html);
                 result = receive.map.text;
             }

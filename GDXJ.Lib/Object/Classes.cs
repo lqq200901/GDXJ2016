@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System.Net;
 using QQLib.Http;
 using GDXJ.Lib.Object.AjaxCommand.Receive;
+using JumpKick.HttpLib;
 
 namespace GDXJ.Lib.Object
 {
@@ -98,7 +99,12 @@ namespace GDXJ.Lib.Object
             {
                 AjaxCommand.Send.CommandParams param = new AjaxCommand.Send.CommandParams() { @params = lcc };
                 string json = JsonConvert.SerializeObject(param, Formatting.Indented);
-                string html = RequestHelper.GetByPostJsonWithCsrf(setting.url.ZxxsXxBjxxQueryUrl, json, ref cookie, Csrf.GetCsrfToken(ref cookie), setting.url.QueryGradeRefererUrl);
+
+                var req = Http.Post(setting.url.ZxxsXxBjxxQueryUrl).Body(json);
+                req.AddHeader("Referer", setting.url.QueryGradeRefererUrl);
+                req.AddHeader("_ccrf.token", Csrf.GetCsrfToken());
+                string html = req.RealTimeGo().RequestString;
+
                 ReceiveClassesDataClass receiveGrade = JsonConvert.DeserializeObject<ReceiveClassesDataClass>(html);
                 result = receiveGrade.rows;
             }

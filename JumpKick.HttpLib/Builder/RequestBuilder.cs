@@ -24,11 +24,25 @@ namespace JumpKick.HttpLib.Builder
 
 
         public void Go()
-        { 
+        {
+            Request req = GoMethod();
+
+            req.Go();
+            
+        }
+
+        public RequestData RealTimeGo()
+        {
+            Request req = GoMethod();
+            return req.RealTimeGo();
+        }
+
+        private Request GoMethod()
+        {
             /*
              * If an actionprovider has not been set, we create one.
              */
-            if(this.actionProvider == null)
+            if (this.actionProvider == null)
             {
                 this.actionProvider = new SettableActionProvider(success, fail);
             }
@@ -42,9 +56,7 @@ namespace JumpKick.HttpLib.Builder
                 Headers = headerProvider,
                 Body = bodyProvider
             };
-
-            req.Go();
-            
+            return req;
         }
 
 
